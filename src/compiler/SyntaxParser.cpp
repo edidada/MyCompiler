@@ -6,8 +6,8 @@
 #include <string.h>
 #include <strstream>
 // #include "Token.cpp"
-#include "LexicalAnalyzer.cpp"
-
+#include "LexicalAnalyzer.h"
+#include <unistd.h>
 using namespace std;
 
 SyntaxParser::SyntaxParser(vector<Token *> tokens) : tokens_(tokens)
@@ -21,7 +21,7 @@ SyntaxParser::~SyntaxParser()
 void SyntaxParser::onError()
 {
 	cout << "Syntax error at line " << token_->getLine() << ": " << token_->getValue() << endl;
-	system("PAUSE");
+	pause();
 }
 
 void SyntaxParser::nextToken()
@@ -743,6 +743,6 @@ int main()
 	LexicalAnalyzer analyzer(path);
 	SyntaxParser parser(analyzer.analyze());
 	parser.parse();
-	system("PAUSE");
+	pause();
 	return 0;
 }

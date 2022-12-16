@@ -5,7 +5,7 @@
 #include <string>
 #include <string.h>
 #include <strstream>
-
+#include <unistd.h>
 using namespace std;
 
 
@@ -1029,10 +1029,10 @@ void Test::PreOrder(TreeNode *t)
 void Test::parse()
 {
 	// string result;//输出结果文件名
-	source = fopen("./src/compiler/TEST3.txt", "r");
+	source = fopen("../TEST3.txt", "r");
 	ofstream write; //输出文件
-	// result="./src/compiler/TEST.txt-Result.txt";
-	write.open("./src/compiler/TEST.txt-Result222.txt");
+	// result="../TEST.txt-Result.txt";
+	write.open("../TEST.txt-Result222.txt");
 	write << "Syntax tree:" << endl;
 
 	TreeNode *t;
@@ -1066,6 +1066,6 @@ int main()
 	// write.close();
 	Test test;
 	test.parse();
-	system("PAUSE");
+	pause();
 	return 0;
 }

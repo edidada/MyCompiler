@@ -10,6 +10,9 @@
 #include <unistd.h>
 using namespace std;
 
+// NOLINTBEGIN(misc-no-recursion) 递归下降解析器的递归结构属于设计本身
+
+
 
 // static int lineno;
 // static int linepos = 0;//读取的字符在lineBuf的位置
@@ -22,6 +25,12 @@ using namespace std;
 
 Test::Test(/* args */)
 {
+	token = EMPTY;
+	source = NULL;
+	lineno = 0;
+	linepos = 0;
+	EOF_FLAG = false;
+	bufsize = 0;
 }
 
 Test::~Test()
@@ -42,7 +51,7 @@ int Test::GetNextChar()
 		lineno++;
 		if (fgets(lineBuf, BUFLEN - 1, source))
 		{
-			bufsize = strlen(lineBuf);
+			bufsize = (int)strlen(lineBuf);
 			linepos = 0;
 			return lineBuf[linepos++];
 		}
@@ -77,7 +86,7 @@ Test::TokenType Test::GetToken()
 	bool save;
 	TokenType CurrentToken;
 	int tokenStringIndex = 0;
-	string assign = "";
+	string assign;
 	while (state != DONE)
 	{
 		int c = GetNextChar();
@@ -280,6 +289,7 @@ string Test::OpeLookUp(TokenType tk) //操作符转换为字符串
 			return Ope[i].str;
 		}
 	}
+	return "";
 }
 
 string Test::Change(NodeKind nk) //节点类型转换为字符串
@@ -290,9 +300,9 @@ string Test::Change(NodeKind nk) //节点类型转换为字符串
 		if (nk == nodekind[i].nk)
 		{
 			return nodekind[i].str;
-			break;
 		}
 	}
+	return "";
 }
 
 char *Test::copyString(char *s)
@@ -303,7 +313,7 @@ char *Test::copyString(char *s)
 	{
 		return NULL;
 	}
-	n = strlen(s) + 1;
+	n = (int)strlen(s) + 1;
 	t = (char *)malloc(n);
 	if (t == NULL)
 	{
@@ -326,7 +336,7 @@ void Test::match(TokenType expected)
 	}
 }
 
-Test::TreeNode *Test::newNode(NodeKind kind)
+Test::TreeNode *Test::newNode(NodeKind kind) const
 {
 	TreeNode *t = (TreeNode *)malloc(sizeof(TreeNode));
 	int i;
@@ -428,7 +438,7 @@ Test::TreeNode *Test::declaration()
 			t->child[1] = a;
 			match(LBRACKET);
 			s = newNode(ConstK);
-			s->attr.val = atoi(tokenString);
+			s->attr.val = static_cast<int>(strtol(tokenString, nullptr, 10));
 			match(NUM);
 			a->child[0] = q;
 			a->child[1] = s;
@@ -595,10 +605,6 @@ Test::TreeNode *Test::local_declaration()
 				p->child[3] = q3;
 				match(LBRACKET);
 				match(RBRACKET);
-				match(SEMI);
-			}
-			else if (token == SEMI)
-			{
 				match(SEMI);
 			}
 			else
@@ -891,7 +897,7 @@ Test::TreeNode *Test::factor(TreeNode *k)
 			t = newNode(ConstK);
 			if ((t != NULL) && (token == NUM))
 			{
-				t->attr.val = atoi(tokenString);
+				t->attr.val = static_cast<int>(strtol(tokenString, nullptr, 10));
 			}
 			match(NUM);
 			break;
@@ -1081,3 +1087,4 @@ int main()
 	pause();
 	return 0;
 }
+// NOLINTEND(misc-no-recursion)

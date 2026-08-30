@@ -93,7 +93,7 @@ private:
 
 	struct
 	{
-		char *str;
+		const char *str;
 		TokenType tok;
 	} ReserverWords[6] = {{"if", IF}, {"else", ELSE}, {"int", INT}, {"return", RETURN}, {"void", VOID}, {"while", WHILE}};
 
@@ -152,9 +152,9 @@ private:
 	int linepos = 0; //读取的字符在lineBuf的位置
 	int EOF_FLAG = false;
 	int bufsize = 0; //lineBuf的长度
-	char lineBuf[BUFLEN];
+	char lineBuf[BUFLEN] = {};
 	FILE *source;
-	char tokenString[MAXTOKENLEN + 1];
+	char tokenString[MAXTOKENLEN + 1] = {};
 	string output; //输出文件
 
 	int blank_number = 0;
@@ -166,8 +166,8 @@ public:
 	TreeNode *declaration_list();
 	TreeNode *declaration();
 	TreeNode *params();
-	TreeNode *param_list(TreeNode *p);
-	TreeNode *param(TreeNode *p);
+	TreeNode *param_list(TreeNode *k);
+	TreeNode *param(TreeNode *k);
 	TreeNode *compound_stmt();
 	TreeNode *local_declaration();
 	TreeNode *statement_list();
@@ -178,11 +178,11 @@ public:
 	TreeNode *return_stmt();
 	TreeNode *expression();
 	TreeNode *var();
-	TreeNode *simple_expression(TreeNode *p);
-	TreeNode *additive_expression(TreeNode *p);
-	TreeNode *term(TreeNode *p);
-	TreeNode *factor(TreeNode *p);
-	TreeNode *call(TreeNode *p);
+	TreeNode *simple_expression(TreeNode *k);
+	TreeNode *additive_expression(TreeNode *k);
+	TreeNode *term(TreeNode *k);
+	TreeNode *factor(TreeNode *k);
+	TreeNode *call(TreeNode *k);
 	TreeNode *args();
 
 	void parse();
@@ -194,9 +194,9 @@ public:
 	TokenType GetToken();
 	string OpeLookUp(TokenType tk);
 	string Change(NodeKind nk);
-	char *copyString(char *s);
+	static char *copyString(char *s);
 	void match(TokenType expected);
-	TreeNode *newNode(NodeKind kind);
+	TreeNode *newNode(NodeKind kind) const;
 };
 
 #endif

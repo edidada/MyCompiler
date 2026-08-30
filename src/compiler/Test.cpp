@@ -5,6 +5,8 @@
 #include <string>
 #include <string.h>
 #include <strstream>
+#include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 using namespace std;
 
@@ -957,6 +959,10 @@ Test::TreeNode *Test::args()
 
 void Test::PreOrder(TreeNode *t)
 {
+	if (t == NULL)
+	{
+		return;
+	}
 	string blank = "  ";
 	int i;
 	for (i = 0; i < blank_number; i++)
@@ -1030,6 +1036,12 @@ void Test::parse()
 {
 	// string result;//输出结果文件名
 	source = fopen("../TEST3.txt", "r");
+	if (source == NULL)
+	{
+		perror("../TEST3.txt");
+		cout << "Error: cannot open input file ../TEST3.txt" << endl;
+		exit(1);
+	}
 	ofstream write; //输出文件
 	// result="../TEST.txt-Result.txt";
 	write.open("../TEST.txt-Result222.txt");
